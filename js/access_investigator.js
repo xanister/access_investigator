@@ -205,13 +205,13 @@ function drawPerms(access_data) {
 function drawResponseCodes(access_data) {
     var graph_data = [['code', 'count']];
     var top_403s = [['filename', 'count']];
-    var top_404s = [['filename', 'count']];    
+    var top_404s = [['filename', 'count']];
     $.each(access_data, function(code, files) {
         var total_count = 0;
         $.each(files, function(filename, count) {
-            if(code == "403"){
+            if (code == "403") {
                 top_403s.push([filename, count]);
-            }else if(code == "404"){
+            } else if (code == "404") {
                 top_404s.push([filename, count]);
             }
             total_count += count;
@@ -219,17 +219,13 @@ function drawResponseCodes(access_data) {
         graph_data.push([code, total_count]);
     });
 
-    // Create and populate the data table.
+    // Pie chart
     var data = google.visualization.arrayToDataTable(graph_data);
-
-    // Create and draw the visualization.
     var chart = new google.visualization.PieChart(document.getElementById('response-codes'));
     chart.draw(data, {title: 'Requests by response code', width: 490, height: 384});
-    
-    // Create and populate the data table.
-    data = google.visualization.arrayToDataTable(top_403s);
 
-    // Create and draw the visualization.
+    // 403s
+    data = google.visualization.arrayToDataTable(top_403s.slice(0,10));
     new google.visualization.ComboChart(document.getElementById('top-403s')).
             draw(data,
                     {title: "Top 403s",
@@ -238,12 +234,10 @@ function drawResponseCodes(access_data) {
                         hAxis: {title: "Count"},
                         seriesType: "bars",
                         series: {5: {type: "line"}}}
-            );    
+            );
 
-    // Create and populate the data table.
-    data = google.visualization.arrayToDataTable(top_404s);
-
-    // Create and draw the visualization.
+    // 404s
+    data = google.visualization.arrayToDataTable(top_404s.slice(0,10));
     new google.visualization.ComboChart(document.getElementById('top-404s')).
             draw(data,
                     {title: "Top 404s",
@@ -252,7 +246,7 @@ function drawResponseCodes(access_data) {
                         hAxis: {title: "Count"},
                         seriesType: "bars",
                         series: {5: {type: "line"}}}
-            );    
+            );
 
 }
 
