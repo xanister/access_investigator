@@ -38,6 +38,12 @@ include('utils.php');
                 <div class="chart" id="perms"></div>
             </span>
         </div>
+        <div class='data-tables'>
+            <span class='data-table' style='margin-right: 20px;'>
+                <h4 class='chart-heading'>Top errors</h4>
+                <div class="chart" id="errors"></div>
+            </span>
+        </div>        
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript" src="//www.google.com/jsapi"></script>
@@ -128,6 +134,15 @@ include('utils.php');
                         drawPerms(response);
                     }
                 });
+                
+                // Errors
+                $.ajax({
+                    url: "data/errors.json",
+                    dataType: "json",
+                    success: function(response) {
+                        drawErrors(response);
+                    }
+                });                
             }
 
             function drawFileRequests(access_data) {
@@ -226,6 +241,17 @@ include('utils.php');
 
                 var data = google.visualization.arrayToDataTable(graph_data);
                 var table = new google.visualization.Table(document.getElementById('perms'));
+                table.draw(data, {width: '490px', allowHtml: true});
+            }
+
+            function drawErrors(access_data) {
+                var graph_data = [['error', 'count']];
+                $.each(access_data, function(error_string, error_count) {
+                    graph_data.push([error_string, error_count]);
+                });
+
+                var data = google.visualization.arrayToDataTable(graph_data);
+                var table = new google.visualization.Table(document.getElementById('errors'));
                 table.draw(data, {width: '490px', allowHtml: true});
             }
 

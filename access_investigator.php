@@ -15,9 +15,10 @@ include("config.php");
 
 global $root_path, $lookback;
 
-// Grab the current apache log files and load into array
+// Grab the current apache access_log and error_log files and load into array
 $logs = scandir('/var/log/httpd');
-$lines = array();
+$access_log_lines = array();
+$error_log_lines = array();
 foreach ($logs as $filename) {
     if (strpos($filename, 'access_log') !== false) {
         echo "[" . date(DATE_RFC2822) . "] - Pulling log file $filename\n";
@@ -25,7 +26,16 @@ foreach ($logs as $filename) {
         if ($handle) {
             while (!feof($handle)) {
                 $buffer = fgets($handle);
-                $lines[] = $buffer;
+                $access_log_lines[] = $buffer;
+            }
+        }
+    } else if (strpos($filename, 'error_log') !== false) {
+        echo "[" . date(DATE_RFC2822) . "] - Pulling log file $filename\n";
+        $handle = fopen("/var/log/httpd/$filename", 'rb');
+        if ($handle) {
+            while (!feof($handle)) {
+                $buffer = fgets($handle);
+                $error_log_lines[] = $buffer;
             }
         }
     }
@@ -51,8 +61,19 @@ for ($i = 0; $i < $lookback; $i++) {
     $perms[$this_date] = $result;
 }
 
+// Calculate stats on error_logs
+echo "[" . date(DATE_RFC2822) . "] - Parsing error logs\n";
+$errors = array();
+foreach ($error_log_lines as $line) {
+    // Parse the line
+    //$regex = '/^(\S+) (\S+) (\S+) \[([^:]+):(\d+:\d+:\d+) ([^\]]+)\] \"(\S+) (.*?) (\S+)\" (\S+) (\S+) "([^"]*)" "([^"]*)"$/';
+    //preg_match($regex, $line, $this_line);
+    //preg_match("/^(\S+) (\S+) (\S+) \[([^:]+):(\d+:\d+:\d+) ([^\]]+)\] [\w.]+ \"(\S+) (.*?) (\S+)\" (\S+) (\S+) (\".*?\") (\".*?\")$/", $line, $this_line);    
+    $errors[$line] = isset($errors[$line]) ? $errors[$line] + 1 : 1;
+}
+
 // Calculate stats on access_logs
-echo "[" . date(DATE_RFC2822) . "] - Parsing\n";
+echo "[" . date(DATE_RFC2822) . "] - Parsing access logs\n";
 $stats = array();
 $days = array();
 $files = array();
@@ -60,12 +81,13 @@ $ips = array();
 $user_agents = array();
 $total_requests = 0;
 $today_requests = 0;
-foreach ($lines as $line) {
+foreach ($access_log_lines as $line) {
     // Parse the line
     $regex = '/^(\S+) (\S+) (\S+) \[([^:]+):(\d+:\d+:\d+) ([^\]]+)\] \"(\S+) (.*?) (\S+)\" (\S+) (\S+) "([^"]*)" "([^"]*)"$/';
     preg_match($regex, $line, $this_line);
 
     if (isset($this_line[4]) && isset($this_line[8])) {
+
         $timestamp = DateTime::createFromFormat('!d/M/Y', $this_line[4])->getTimestamp();
         $this_date = date('m/d/Y', $timestamp);
 
@@ -116,16 +138,18 @@ ksort($days);
 arsort($files);
 arsort($user_agents);
 arsort($ips);
+arsort($errors);
 
 // Write to files
 echo "[" . date(DATE_RFC2822) . "] - Writing json files\n";
-file_put_contents(__DIR__ . '/totals.json', json_encode(array('today' => $today_requests, 'total' => $total_requests, 'last_update' => date(DATE_RFC2822))));
-file_put_contents(__DIR__ . '/days.json', json_encode($days));
-file_put_contents(__DIR__ . '/files.json', json_encode($files));
-file_put_contents(__DIR__ . '/ips.json', json_encode($ips));
-file_put_contents(__DIR__ . '/user_agents.json', json_encode($user_agents));
-file_put_contents(__DIR__ . '/new_files.json', json_encode($new_files));
-file_put_contents(__DIR__ . '/perms.json', json_encode($perms));
+file_put_contents(__DIR__ . '/data/totals.json', json_encode(array('today' => $today_requests, 'total' => $total_requests, 'last_update' => date(DATE_RFC2822))));
+file_put_contents(__DIR__ . '/data/days.json', json_encode($days));
+file_put_contents(__DIR__ . '/data/files.json', json_encode($files));
+file_put_contents(__DIR__ . '/data/ips.json', json_encode($ips));
+file_put_contents(__DIR__ . '/data/user_agents.json', json_encode($user_agents));
+file_put_contents(__DIR__ . '/data/new_files.json', json_encode($new_files));
+file_put_contents(__DIR__ . '/data/perms.json', json_encode($perms));
+file_put_contents(__DIR__ . '/data/errors.json', json_encode($errors));
 
 // Email
 if (date('H') != '23')
