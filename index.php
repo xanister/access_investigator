@@ -6,11 +6,11 @@ include('utils.php');
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-        <title>Access Investigator</title
+        <title>Access Investigator</title>
         <link rel="stylesheet" type="text/css" href="access_investigator.css" />
     </head>
     <body>
-      
+
         <div class='header'>
             <span>
                 <h4>Access Investigator stats for <?php echo date('l \t\h\e jS'); ?></h4>
@@ -20,7 +20,7 @@ include('utils.php');
                 <div class="chart" id="server-load"></div>
             </span>
         </div>
-        
+
         <hr />
         <div class="chart" id="day-requests"></div>
         <div class="chart" id="file-requests"></div>
@@ -145,7 +145,7 @@ include('utils.php');
                 new google.visualization.BarChart(document.getElementById('file-requests')).
                         draw(data,
                                 {title: "Requests by file",
-                                    width: 510, height: 384,
+                                    width: 490, height: 384,
                                     vAxis: {title: "Filename"},
                                     hAxis: {title: "Requests"}}
                         );
@@ -164,7 +164,7 @@ include('utils.php');
                 new google.visualization.ComboChart(document.getElementById('day-requests')).
                         draw(data,
                                 {title: "Requests by day",
-                                    width: 510, height: 384,
+                                    width: 490, height: 384,
                                     vAxis: {title: "Requests"},
                                     hAxis: {title: "Date"}}
                         );
@@ -181,7 +181,7 @@ include('utils.php');
 
                 // Create and draw the visualization.
                 var chart = new google.visualization.PieChart(document.getElementById('user-agents'));
-                chart.draw(data, {title: 'Requests by user agent', width: 510, height: 384});
+                chart.draw(data, {title: 'Requests by user agent', width: 490, height: 384});
             }
 
             function drawIps(access_data) {
@@ -199,7 +199,7 @@ include('utils.php');
                 new google.visualization.ComboChart(document.getElementById('ip-requests')).
                         draw(data,
                                 {title: "Requests by ip",
-                                    width: 510, height: 384,
+                                    width: 490, height: 384,
                                     vAxis: {title: "Requests"},
                                     hAxis: {title: "IP"},
                                     seriesType: "bars",
@@ -215,7 +215,7 @@ include('utils.php');
 
                 var data = google.visualization.arrayToDataTable(graph_data);
                 var table = new google.visualization.Table(document.getElementById('new-files'));
-                table.draw(data, {width: '500px', allowHtml: true});
+                table.draw(data, {width: '490px', allowHtml: true});
             }
 
             function drawPerms(access_data) {
@@ -226,7 +226,7 @@ include('utils.php');
 
                 var data = google.visualization.arrayToDataTable(graph_data);
                 var table = new google.visualization.Table(document.getElementById('perms'));
-                table.draw(data, {width: '500px', allowHtml: true});
+                table.draw(data, {width: '490px', allowHtml: true});
             }
 
             function drawServerLoad() {
