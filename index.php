@@ -38,6 +38,7 @@ include('utils.php');
                 <div class="chart" id="perms"></div>
             </span>
         </div>
+        <hr />
         <div class='data-tables'>
             <span class='data-table' style='margin-right: 20px;'>
                 <h4 class='chart-heading'>Top errors</h4>
@@ -245,9 +246,9 @@ include('utils.php');
             }
 
             function drawErrors(access_data) {
-                var graph_data = [['error', 'count']];
+                var graph_data = [['error', 'count', '']];
                 $.each(access_data, function(error_string, error_count) {
-                    graph_data.push([error_string, error_count]);
+                    graph_data.push([error_string, error_count, '']);
                 });
 
                 var data = google.visualization.arrayToDataTable(graph_data);
