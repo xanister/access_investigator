@@ -131,7 +131,8 @@ function drawFileRequests(access_data) {
 function drawDayRequests(access_data) {
     var graph_data = [['date', 'requests']];
     $.each(access_data, function(rdate, requests) {
-        graph_data.push([rdate, requests]);
+        if(requests > 200)
+            graph_data.push([rdate, requests]);
     });
 
     // Create and populate the data table.
