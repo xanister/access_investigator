@@ -243,9 +243,9 @@ include('utils.php');
             }
 
             function drawErrors(access_data) {
-                var graph_data = [['error', 'count', '']];
+                var graph_data = [['count', 'error', '']];
                 $.each(access_data, function(error_string, error_count) {
-                    graph_data.push([error_string, error_count, '']);
+                    graph_data.push([error_count, error_string, '']);
                 });
 
                 var data = google.visualization.arrayToDataTable(graph_data);
