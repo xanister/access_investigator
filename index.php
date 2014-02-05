@@ -6,7 +6,7 @@ include('utils.php');
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-        <title>Access Investigator</title
+        <title>Access Investigator</title>
         <link rel="stylesheet" type="text/css" href="access_investigator.css" />
     </head>
     <body>
