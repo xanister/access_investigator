@@ -10,7 +10,10 @@
 ini_set('memory_limit', '-1');
 date_default_timezone_set('UTC');
 
-$root_path = "/srv/www/ads.thestudio.condenast.com/public_html/";
+include("config.php");
+
+global $root_path;
+//$root_path = "/srv/www/ads.thestudio.condenast.com/public_html/";
 $lookback = 10;
 
 // Grab the current apache log files and load into array
