@@ -1,0 +1,74 @@
+
+body{
+    width: 1024px;
+    margin: 0 auto;
+    padding: 10px 0 30px 0;
+    font-family: sans-serif;
+}
+
+.header span{
+    width: 49%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: center;
+}
+
+.chart-heading{
+    margin-left: 100px;
+    font-size: 13px;
+}
+
+.chart{
+    display: inline-block;
+}
+
+#last-update{
+    margin: 0;
+}
+
+.data-tables{
+    position: relative;
+    height: 400px;
+}
+
+.data-table{
+    position: absolute;
+    top: 0;
+}
+
+.data-table.right{
+    right: 0;
+}
+
+td{
+    min-width: 60px;
+}
+
+td:nth-child(3){
+    max-width: 340px;
+}
+
+.google-visualization-table-td-number{
+    text-align: center;
+}
+
+.file-list{
+    cursor: pointer;
+    height: 18px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.file-list.showing{
+    height: 285px;
+    position: absolute;
+    background-color: white;
+    top: 0;
+    border: 3px solid black;
+    width: 319px;
+    overflow-y: scroll;
+}
+
+.legal{
+    text-align: center;
+}

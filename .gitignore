@@ -1,3 +1,4 @@
+access_log
 stats.json
 user_agents.json
 days.json

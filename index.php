@@ -1,112 +1,51 @@
-<?php 
-
+<?php
 date_default_timezone_set('UTC');
-function get_server_memory_usage(){
- 
-	$free = shell_exec('free');
-	$free = (string)trim($free);
-	$free_arr = explode("\n", $free);
-	$mem = explode(" ", $free_arr[1]);
-	$mem = array_filter($mem);
-	$mem = array_merge($mem);
-	$memory_usage = $mem[2]/$mem[1]*100;
- 
-	return $memory_usage;
-}
-function get_server_cpu_usage(){
-        $sys_load = sys_getloadavg();
-	return $sys_load[0];
-}
+include('utils.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-        <title>Access Investigator</title>
+        <title>Access Investigator</title
+        <link rel="stylesheet" type="text/css" href="access_investigator.css" />
+    </head>
+    <body>
+      
+        <div class='header'>
+            <span>
+                <h4>Access Investigator stats for <?php echo date('l \t\h\e jS'); ?></h4>
+                <h4 id="last-update"></h4>
+            </span>
+            <span>
+                <div class="chart" id="server-load"></div>
+            </span>
+        </div>
+        
+        <hr />
+        <div class="chart" id="day-requests"></div>
+        <div class="chart" id="file-requests"></div>
+        <hr />
+        <div class="chart" id="user-agents"></div>
+        <div class="chart" id="ip-requests"></div>
+        <hr />
+        <div class='data-tables'>
+            <span class='data-table' style='margin-right: 20px;'>
+                <h4 class='chart-heading'>Modified/Created files</h4>
+                <div class="chart" id="new-files"></div>
+            </span>
+            <span class='data-table right'>
+                <h4 class='chart-heading'>Files with permission changes</h4>
+                <div class="chart" id="perms"></div>
+            </span>
+        </div>
+
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript" src="//www.google.com/jsapi"></script>
         <script type="text/javascript">
-	    google.load('visualization', '1', {packages:['gauge']});
-	    google.load('visualization', '1', {packages:['table']});
+            google.load('visualization', '1', {packages: ['gauge']});
+            google.load('visualization', '1', {packages: ['table']});
             google.load('visualization', '1', {packages: ['corechart']});
-        </script>
-        <style>
-            body{
-                width: 1024px;
-                margin: 0 auto;
-		padding: 10px 0 30px 0;
-	        font-family: sans-serif;
-            }
-
-	    .header span{
-		width: 49%;
-		display: inline-block;
-		text-align: center;
-	 	vertical-align: center;
-	    }
-
-	    .chart-heading{
-                margin-left: 100px;
-		font-size: 13px;
-	    }
-
-            .chart{
-                display: inline-block;
-            }
-
-            #last-update{
-                margin: 0;
-            }
-
-	    .data-tables{
-		position: relative;
-		height: 400px;
-	    }
-
-	    .data-table{
-		position: absolute;
-		top: 0;
-	    }
-
-	    .data-table.right{
-		right: 0;
-	    }
-
-  	    td{
-		min-width: 60px;
-	    }
-
-	    td:nth-child(3){
-		max-width: 340px;
-	    }
-
-	    .google-visualization-table-td-number{
-		text-align: center;
-	    }
-
-	    .file-list{
-		cursor: pointer;
-		height: 18px;
-		overflow: hidden;
-		word-wrap: break-word;
-	    }
-
-	    .file-list.showing{
-	    	height: 285px;
-		position: absolute;
-		background-color: white;
-		top: 0;
-		border: 3px solid black;
-		width: 319px;
-		overflow-y: scroll;
-	    }
-
-	    .legal{
-		text-align: center;
-	    }
-        </style>
-        <script type="text/javascript">
-	    var root_path = '/srv/www/ads.thestudio.condenast.com/public_html';
+            var root_path = '/srv/www/ads.thestudio.condenast.com/public_html';
             $(document).ready(function() {
 
                 // Totals
@@ -117,24 +56,24 @@ function get_server_cpu_usage(){
                         window.totals = response;
                         $('#last-update').html('Last updated: ' + window.totals.last_update + " UTC");
                         drawCharts();
-			$(document).on('click', '.file-list', toggleShowing);
-                	$('.google-visualization-table-th').css('min-width', '60px');
+                        $(document).on('click', '.file-list', toggleShowing);
+                        $('.google-visualization-table-th').css('min-width', '60px');
                     }
                 });
 
             });
 
-	    function toggleShowing(element){
-            	if($(this).hasClass('showing')){
+            function toggleShowing(element) {
+                if ($(this).hasClass('showing')) {
                     $(this).removeClass('showing');
-		    $(this).scrollTop(0);
-                }else
+                    $(this).scrollTop(0);
+                } else
                     $(this).addClass('showing');
-	    }
+            }
 
             function drawCharts() {
-		// Server load
-		drawServerLoad();
+                // Server load
+                drawServerLoad();
 
                 // Stats
                 $.ajax({
@@ -145,7 +84,7 @@ function get_server_cpu_usage(){
                     }
                 });
 
-		// Files
+                // Files
                 $.ajax({
                     url: "files.json",
                     dataType: "json",
@@ -172,7 +111,7 @@ function get_server_cpu_usage(){
                     }
                 });
 
-		// New files
+                // New files
                 $.ajax({
                     url: "new_files.json",
                     dataType: "json",
@@ -194,9 +133,9 @@ function get_server_cpu_usage(){
             function drawFileRequests(access_data) {
                 var graph_data = [['target', 'requests']];
                 $.each(access_data, function(filename, requests) {
-                  graph_data.push([filename, requests]);
-	          if(graph_data.length > 10)
-                    return false;
+                    graph_data.push([filename, requests]);
+                    if (graph_data.length > 10)
+                        return false;
                 });
 
                 // Create and populate the data table.
@@ -205,11 +144,11 @@ function get_server_cpu_usage(){
                 // Create and draw the visualization.
                 new google.visualization.BarChart(document.getElementById('file-requests')).
                         draw(data,
-                        {title: "Requests by file",
-                            width: 510, height: 384,
-                            vAxis: {title: "Filename"},
-                            hAxis: {title: "Requests"}}
-                );
+                                {title: "Requests by file",
+                                    width: 510, height: 384,
+                                    vAxis: {title: "Filename"},
+                                    hAxis: {title: "Requests"}}
+                        );
             }
 
             function drawDayRequests(access_data) {
@@ -224,11 +163,11 @@ function get_server_cpu_usage(){
                 // Create and draw the visualization.
                 new google.visualization.ComboChart(document.getElementById('day-requests')).
                         draw(data,
-                        {title: "Requests by day",
-                            width: 510, height: 384,
-                            vAxis: {title: "Requests"},
-                            hAxis: {title: "Date"}}
-                );
+                                {title: "Requests by day",
+                                    width: 510, height: 384,
+                                    vAxis: {title: "Requests"},
+                                    hAxis: {title: "Date"}}
+                        );
             }
 
             function drawUserAgents(access_data) {
@@ -249,8 +188,8 @@ function get_server_cpu_usage(){
                 var graph_data = [['ip', 'requests']];
                 $.each(access_data, function(ip, requests) {
                     graph_data.push([ip, requests]);
-		    if(graph_data.length > 10)
-		      return false;
+                    if (graph_data.length > 10)
+                        return false;
                 });
 
                 // Create and populate the data table.
@@ -259,30 +198,30 @@ function get_server_cpu_usage(){
                 // Create and draw the visualization.
                 new google.visualization.ComboChart(document.getElementById('ip-requests')).
                         draw(data,
-                        {title: "Requests by ip",
-                            width: 510, height: 384,
-                            vAxis: {title: "Requests"},
-                            hAxis: {title: "IP"},
-                            seriesType: "bars",
-                            series: {5: {type: "line"}}}
-                );
+                                {title: "Requests by ip",
+                                    width: 510, height: 384,
+                                    vAxis: {title: "Requests"},
+                                    hAxis: {title: "IP"},
+                                    seriesType: "bars",
+                                    series: {5: {type: "line"}}}
+                        );
             }
 
-            function drawNewFiles(access_data){
-        	var graph_data = [['date', 'amount', '']];
-		$.each(access_data, function(created_date, filenames){
-			graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path,"g"), '').substring(0,45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path,"g"), '') + "</div>"]);
-  		});
+            function drawNewFiles(access_data) {
+                var graph_data = [['date', 'amount', '']];
+                $.each(access_data, function(created_date, filenames) {
+                    graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
+                });
 
                 var data = google.visualization.arrayToDataTable(graph_data);
-        	var table = new google.visualization.Table(document.getElementById('new-files'));
-        	table.draw(data, {width: '500px', allowHtml: true});
-	    }
+                var table = new google.visualization.Table(document.getElementById('new-files'));
+                table.draw(data, {width: '500px', allowHtml: true});
+            }
 
-            function drawPerms(access_data){
+            function drawPerms(access_data) {
                 var graph_data = [['date', 'amount', '']];
-                $.each(access_data, function(created_date, filenames){
-                        graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path,"g"), '').substring(0,45)  + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path,"g"), '') + "</div>"]);
+                $.each(access_data, function(created_date, filenames) {
+                    graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
                 });
 
                 var data = google.visualization.arrayToDataTable(graph_data);
@@ -290,52 +229,22 @@ function get_server_cpu_usage(){
                 table.draw(data, {width: '500px', allowHtml: true});
             }
 
-	    function drawServerLoad(){
-	     	var data = google.visualization.arrayToDataTable([
-          		['Label', 'Value'],
-          		['Memory', <?php echo floor(get_server_memory_usage()); ?>],
-          		['CPU', <?php echo get_server_cpu_usage(); ?>]]);
+            function drawServerLoad() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Label', 'Value'],
+                    ['Memory', <?php echo floor(get_server_memory_usage()); ?>],
+                    ['CPU', <?php echo get_server_cpu_usage(); ?>]]);
 
-        	var options = {
-          		width: 200, height: 120,
-          		redFrom: 90, redTo: 100,
-          		yellowFrom:75, yellowTo: 90,
-          		minorTicks: 5};
+                var options = {
+                    width: 200, height: 120,
+                    redFrom: 90, redTo: 100,
+                    yellowFrom: 75, yellowTo: 90,
+                    minorTicks: 5};
 
-        	var chart = new google.visualization.Gauge(document.getElementById('server-load'));
-        	chart.draw(data, options);
-	    }
+                var chart = new google.visualization.Gauge(document.getElementById('server-load'));
+                chart.draw(data, options);
+            }
 
-        </script>
-    </head>
-    <body style="width: 1024px; margin: 0 auto;">
-	<div class='header'>
-            <span>
-	      <h4>Access Investigator stats for <?php echo date('l \t\h\e jS'); ?></h4>
-              <h4 id="last-update"></h4>
-	    </span>
-            <span>
-                <div class="chart" id="server-load"></div>
-	    </span>
-        </div>
-	<hr>
-        <div class="chart" id="day-requests"></div>
-        <div class="chart" id="file-requests"></div>
-	<hr>
-        <div class="chart" id="user-agents"></div>
-        <div class="chart" id="ip-requests"></div>
-	<hr>
-	<div class='data-tables'>
-	  <span class='data-table' style='margin-right: 20px;'>
-            <h4 class='chart-heading'>Modified/Created files</h4>
-	    <div class="chart" id="new-files"></div>
-          </span>
-	  <span class='data-table right'>
- 	    <h4 class='chart-heading'>Files with permission changes</h4>
-            <div class="chart" id="perms"></div>
-          </span>
-	</div>
-
-	<div class='legal'>(c) Conde Nast</div>
+        </script>        
     </body>
 </html>
