@@ -39,12 +39,9 @@ include('utils.php');
             </span>
         </div>
         <hr />
-        <div class='data-tables'>
-            <span class='data-table' style='margin-right: 20px;'>
-                <h4 class='chart-heading'>Top errors</h4>
-                <div class="chart" id="errors"></div>
-            </span>
-        </div>        
+        <h4 class='chart-heading'>Top errors</h4>
+        <div class="chart" id="errors"></div>
+
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript" src="//www.google.com/jsapi"></script>
@@ -135,7 +132,7 @@ include('utils.php');
                         drawPerms(response);
                     }
                 });
-                
+
                 // Errors
                 $.ajax({
                     url: "data/errors.json",
@@ -143,7 +140,7 @@ include('utils.php');
                     success: function(response) {
                         drawErrors(response);
                     }
-                });                
+                });
             }
 
             function drawFileRequests(access_data) {

@@ -40,11 +40,11 @@ body{
     right: 0;
 }
 
-td{
+.data-table td{
     min-width: 60px;
 }
 
-td:nth-child(3){
+.data-table td:nth-child(3){
     max-width: 330px;
 }
 
