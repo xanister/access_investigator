@@ -41,6 +41,9 @@ include('utils.php');
         <hr />
         <div class="chart" id="response-codes"></div>
         <hr />
+        <div class="chart" id="top-403s"></div>
+        <div class="chart" id="top-404s"></div>      
+        <hr />
         <h4 class='chart-heading'>Top errors</h4>
         <div class="chart" id="errors"></div>
 
