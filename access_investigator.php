@@ -74,6 +74,7 @@ foreach ($error_log_lines as $line) {
 
 // Calculate stats on access_logs
 echo "[" . date(DATE_RFC2822) . "] - Parsing access logs\n";
+$response_codes = array();
 $stats = array();
 $days = array();
 $files = array();
@@ -86,6 +87,10 @@ foreach ($access_log_lines as $line) {
     $regex = '/^(\S+) (\S+) (\S+) \[([^:]+):(\d+:\d+:\d+) ([^\]]+)\] \"(\S+) (.*?) (\S+)\" (\S+) (\S+) "([^"]*)" "([^"]*)"$/';
     preg_match($regex, $line, $this_line);
 
+    if(isset($this_line[10])){
+        $response_codes[$this_line[10]][] = $this_line[8];
+    }
+    
     if (isset($this_line[4]) && isset($this_line[8])) {
 
         $timestamp = DateTime::createFromFormat('!d/M/Y', $this_line[4])->getTimestamp();
@@ -150,6 +155,7 @@ file_put_contents(__DIR__ . '/data/user_agents.json', json_encode($user_agents))
 file_put_contents(__DIR__ . '/data/new_files.json', json_encode($new_files));
 file_put_contents(__DIR__ . '/data/perms.json', json_encode($perms));
 file_put_contents(__DIR__ . '/data/errors.json', json_encode($errors));
+file_put_contents(__DIR__ . '/data/response_codes.json', json_encode($response_codes));
 
 // Email
 if (date('H') != '23')

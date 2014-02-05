@@ -1,5 +1,6 @@
 config.php
 access_log
+data/response_codes.json
 data/stats.json
 data/user_agents.json
 data/days.json

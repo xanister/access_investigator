@@ -246,6 +246,8 @@ include('utils.php');
                 var graph_data = [['count', 'error']];
                 $.each(access_data, function(error_string, error_count) {
                     graph_data.push([error_count, error_string]);
+                    if (graph_data.length > 10)
+                        return false;                    
                 });
 
                 var data = google.visualization.arrayToDataTable(graph_data);
