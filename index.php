@@ -50,7 +50,7 @@ include('utils.php');
 
                 // Totals
                 $.ajax({
-                    url: "totals.json",
+                    url: "data/totals.json",
                     dataType: "json",
                     success: function(response) {
                         window.totals = response;
@@ -77,7 +77,7 @@ include('utils.php');
 
                 // Stats
                 $.ajax({
-                    url: "days.json",
+                    url: "data/days.json",
                     dataType: "json",
                     success: function(response) {
                         drawDayRequests(response);
@@ -86,7 +86,7 @@ include('utils.php');
 
                 // Files
                 $.ajax({
-                    url: "files.json",
+                    url: "data/files.json",
                     dataType: "json",
                     success: function(response) {
                         drawFileRequests(response);
@@ -95,7 +95,7 @@ include('utils.php');
 
                 // User agents
                 $.ajax({
-                    url: "user_agents.json",
+                    url: "data/user_agents.json",
                     dataType: "json",
                     success: function(response) {
                         drawUserAgents(response);
@@ -104,7 +104,7 @@ include('utils.php');
 
                 // Ips
                 $.ajax({
-                    url: "ips.json",
+                    url: "data/ips.json",
                     dataType: "json",
                     success: function(response) {
                         drawIps(response);
@@ -113,7 +113,7 @@ include('utils.php');
 
                 // New files
                 $.ajax({
-                    url: "new_files.json",
+                    url: "data/new_files.json",
                     dataType: "json",
                     success: function(response) {
                         drawNewFiles(response);
@@ -122,7 +122,7 @@ include('utils.php');
 
                 // Perms
                 $.ajax({
-                    url: "perms.json",
+                    url: "data/perms.json",
                     dataType: "json",
                     success: function(response) {
                         drawPerms(response);
