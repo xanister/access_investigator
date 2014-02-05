@@ -243,14 +243,14 @@ include('utils.php');
             }
 
             function drawErrors(access_data) {
-                var graph_data = [['count', 'error', '']];
+                var graph_data = [['count', 'error']];
                 $.each(access_data, function(error_string, error_count) {
-                    graph_data.push([error_count, error_string, '']);
+                    graph_data.push([error_count, error_string]);
                 });
 
                 var data = google.visualization.arrayToDataTable(graph_data);
                 var table = new google.visualization.Table(document.getElementById('errors'));
-                table.draw(data, {width: '490px', allowHtml: true});
+                table.draw(data, {width: '1024px', allowHtml: true});
             }
 
             function drawServerLoad() {
