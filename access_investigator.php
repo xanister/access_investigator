@@ -88,7 +88,7 @@ foreach ($access_log_lines as $line) {
     preg_match($regex, $line, $this_line);
 
     if(isset($this_line[10])){
-        $response_codes[$this_line[10]][] = $this_line[8];
+        $response_codes[$this_line[10]][$this_line[8]] = isset($response_codes[$this_line[10]][$this_line[8]]) ? $response_codes[$this_line[10]][$this_line[8]] : 1;
     }
     
     if (isset($this_line[4]) && isset($this_line[8])) {
