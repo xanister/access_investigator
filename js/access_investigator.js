@@ -12,12 +12,12 @@ $(document).ready(function() {
         dataType: "json",
         success: function(response) {
             window.totals = response;
-            $('#last-update').html('Last updated: ' + window.totals.last_update + " UTC");
-            drawCharts();
-            $(document).on('click', '.file-list', toggleShowing);
+            $('#last-update').html('Last updated: ' + window.totals.last_update + " UTC");            
             $('.google-visualization-table-th').css('min-width', '60px');
         }
     });
+
+    $(document).on('click', '.file-list', toggleShowing);
 
 });
 
@@ -25,8 +25,10 @@ function toggleShowing(element) {
     if ($(this).hasClass('showing')) {
         $(this).removeClass('showing');
         $(this).scrollTop(0);
-    } else
+    } else{
+        $('.fileList').removeClass('showing');        
         $(this).addClass('showing');
+    }
 }
 
 function drawCharts() {
@@ -94,6 +96,7 @@ function drawCharts() {
     });
 
     // Errors
+    /*
     $.ajax({
         url: "data/errors.json",
         dataType: "json",
@@ -101,6 +104,7 @@ function drawCharts() {
             drawErrors(response);
         }
     });
+    */
 }
 
 function drawFileRequests(access_data) {
@@ -206,7 +210,7 @@ function drawResponseCodes(access_data) {
     var graph_data = [['code', 'count']];
     var top_403s = [['filename', 'count']];
     var top_404s = [['filename', 'count']];
-    var top_500s = [['filename', 'count']];    
+    var top_500s = [['filename', 'count']];
     $.each(access_data, function(code, files) {
         var total_count = 0;
         $.each(files, function(filename, count) {
@@ -228,7 +232,7 @@ function drawResponseCodes(access_data) {
     chart.draw(data, {title: 'Requests by response code', width: 490, height: 384});
 
     // 403s
-    data = google.visualization.arrayToDataTable(top_403s.slice(0,10));
+    data = google.visualization.arrayToDataTable(top_403s.slice(0, 10));
     new google.visualization.ComboChart(document.getElementById('top-403s')).
             draw(data,
                     {title: "Top 403s",
@@ -240,7 +244,7 @@ function drawResponseCodes(access_data) {
             );
 
     // 404s
-    data = google.visualization.arrayToDataTable(top_404s.slice(0,10));
+    data = google.visualization.arrayToDataTable(top_404s.slice(0, 10));
     new google.visualization.ComboChart(document.getElementById('top-404s')).
             draw(data,
                     {title: "Top 404s",
@@ -252,7 +256,7 @@ function drawResponseCodes(access_data) {
             );
 
     // 500s
-    data = google.visualization.arrayToDataTable(top_500s.slice(0,10));
+    data = google.visualization.arrayToDataTable(top_500s.slice(0, 10));
     new google.visualization.ComboChart(document.getElementById('top-500s')).
             draw(data,
                     {title: "Top 500s",

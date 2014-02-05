@@ -41,13 +41,11 @@ include('utils.php');
         <hr />
         <div class="chart" id="response-codes"></div>
         <div class="chart" id="top-500s"></div>              
-        <hr />
         <div class="chart" id="top-403s"></div>
         <div class="chart" id="top-404s"></div>      
         <hr />
         <h4 class='chart-heading'>Top errors</h4>
         <div class="chart" id="errors"></div>
-
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript" src="//www.google.com/jsapi"></script>
@@ -69,8 +67,8 @@ include('utils.php');
             }
 
             $(document).ready(function() {
-                // Server load
                 drawServerLoad();
+                drawCharts();
             });
         </script>
     </body>
