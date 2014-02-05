@@ -8,7 +8,7 @@ $(document).ready(function() {
 
     // Totals
     $.ajax({
-        url: "../data/totals.json",
+        url: "data/totals.json",
         dataType: "json",
         success: function(response) {
             window.totals = response;
@@ -32,7 +32,7 @@ function toggleShowing(element) {
 function drawCharts() {
     // Stats
     $.ajax({
-        url: "../data/days.json",
+        url: "data/days.json",
         dataType: "json",
         success: function(response) {
             drawDayRequests(response);
@@ -41,7 +41,7 @@ function drawCharts() {
 
     // Files
     $.ajax({
-        url: "../data/files.json",
+        url: "data/files.json",
         dataType: "json",
         success: function(response) {
             drawFileRequests(response);
@@ -50,7 +50,7 @@ function drawCharts() {
 
     // User agents
     $.ajax({
-        url: "../data/user_agents.json",
+        url: "data/user_agents.json",
         dataType: "json",
         success: function(response) {
             drawUserAgents(response);
@@ -59,7 +59,7 @@ function drawCharts() {
 
     // Ips
     $.ajax({
-        url: "../data/ips.json",
+        url: "data/ips.json",
         dataType: "json",
         success: function(response) {
             drawIps(response);
@@ -68,7 +68,7 @@ function drawCharts() {
 
     // New files
     $.ajax({
-        url: "../data/new_files.json",
+        url: "data/new_files.json",
         dataType: "json",
         success: function(response) {
             drawNewFiles(response);
@@ -77,7 +77,7 @@ function drawCharts() {
 
     // Perms
     $.ajax({
-        url: "../data/perms.json",
+        url: "data/perms.json",
         dataType: "json",
         success: function(response) {
             drawPerms(response);
@@ -86,7 +86,7 @@ function drawCharts() {
 
     // Response codes
     $.ajax({
-        url: "../data/response_codes.json",
+        url: "data/response_codes.json",
         dataType: "json",
         success: function(response) {
             drawResponseCodes(response);
@@ -95,7 +95,7 @@ function drawCharts() {
 
     // Errors
     $.ajax({
-        url: "../data/errors.json",
+        url: "data/errors.json",
         dataType: "json",
         success: function(response) {
             drawErrors(response);
