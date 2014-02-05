@@ -39,6 +39,8 @@ include('utils.php');
             </span>
         </div>
         <hr />
+        <div class="chart" id="response-codes"></div>
+        <hr />
         <h4 class='chart-heading'>Top errors</h4>
         <div class="chart" id="errors"></div>
 
@@ -130,6 +132,15 @@ include('utils.php');
                     dataType: "json",
                     success: function(response) {
                         drawPerms(response);
+                    }
+                });
+
+                // Response codes
+                $.ajax({
+                    url: "data/response_codes.json",
+                    dataType: "json",
+                    success: function(response) {
+                        drawResponseCodes(response);
                     }
                 });
 
@@ -242,12 +253,30 @@ include('utils.php');
                 table.draw(data, {width: '490px', allowHtml: true});
             }
 
+            function drawResponseCodes(access_data) {
+                var graph_data = [['code', 'count']];
+                $.each(access_data, function(code, files) {
+                    var total_count = 0;
+                    $.each(files, function(filename, count) {
+                        total_count += count;
+                    });
+                    graph_data.push([code, total_count]);
+                });
+
+                // Create and populate the data table.
+                var data = google.visualization.arrayToDataTable(graph_data);
+
+                // Create and draw the visualization.
+                var chart = new google.visualization.PieChart(document.getElementById('response-codes'));
+                chart.draw(data, {title: 'Requests by response code', width: 490, height: 384});
+            }
+
             function drawErrors(access_data) {
                 var graph_data = [['count', 'error']];
                 $.each(access_data, function(error_string, error_count) {
                     graph_data.push([error_count, error_string]);
                     if (graph_data.length > 10)
-                        return false;                    
+                        return false;
                 });
 
                 var data = google.visualization.arrayToDataTable(graph_data);

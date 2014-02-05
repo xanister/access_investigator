@@ -88,7 +88,8 @@ foreach ($access_log_lines as $line) {
     preg_match($regex, $line, $this_line);
 
     if(isset($this_line[10])){
-        $response_codes[$this_line[10]][$this_line[8]] = isset($response_codes[$this_line[10]][$this_line[8]]) ? $response_codes[$this_line[10]][$this_line[8]] : 1;
+        if($this_line[10] != "200")
+            $response_codes[$this_line[10]][$this_line[8]] = isset($response_codes[$this_line[10]][$this_line[8]]) ? $response_codes[$this_line[10]][$this_line[8]] + 1 : 1;
     }
     
     if (isset($this_line[4]) && isset($this_line[8])) {
@@ -144,6 +145,11 @@ arsort($files);
 arsort($user_agents);
 arsort($ips);
 arsort($errors);
+ksort($response_codes);
+foreach($response_codes as &$code){
+    arsort($code);
+    //$code = array_slice($code, 0, 10);
+}
 
 // Write to files
 echo "[" . date(DATE_RFC2822) . "] - Writing json files\n";
