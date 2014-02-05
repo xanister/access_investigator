@@ -40,6 +40,7 @@ include('utils.php');
         </div>
         <hr />
         <div class="chart" id="response-codes"></div>
+        <div class="chart" id="top-500s"></div>              
         <hr />
         <div class="chart" id="top-403s"></div>
         <div class="chart" id="top-404s"></div>      

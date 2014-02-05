@@ -206,6 +206,7 @@ function drawResponseCodes(access_data) {
     var graph_data = [['code', 'count']];
     var top_403s = [['filename', 'count']];
     var top_404s = [['filename', 'count']];
+    var top_500s = [['filename', 'count']];    
     $.each(access_data, function(code, files) {
         var total_count = 0;
         $.each(files, function(filename, count) {
@@ -213,6 +214,8 @@ function drawResponseCodes(access_data) {
                 top_403s.push([filename, count]);
             } else if (code == "404") {
                 top_404s.push([filename, count]);
+            } else if (code == "500") {
+                top_500s.push([filename, count]);
             }
             total_count += count;
         });
@@ -248,6 +251,17 @@ function drawResponseCodes(access_data) {
                         series: {5: {type: "line"}}}
             );
 
+    // 500s
+    data = google.visualization.arrayToDataTable(top_500s.slice(0,10));
+    new google.visualization.ComboChart(document.getElementById('top-500s')).
+            draw(data,
+                    {title: "Top 500s",
+                        width: 490, height: 384,
+                        vAxis: {title: "File"},
+                        hAxis: {title: "Count"},
+                        seriesType: "bars",
+                        series: {5: {type: "line"}}}
+            );
 }
 
 function drawErrors(access_data) {
