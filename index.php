@@ -51,14 +51,14 @@ include('utils.php');
         <script type="text/javascript">
             function drawServerLoad() {
                 var data = google.visualization.arrayToDataTable([
-                        ['Label', 'Value'],
-                        ['Memory', < ?php echo floor(get_server_memory_usage()); ? > ],
-                        ['CPU', < ?php echo get_server_cpu_usage(); ? > ]]);
-                        var options = {
-                            width: 200, height: 120,
-                            redFrom: 90, redTo: 100,
-                            yellowFrom: 75, yellowTo: 90,
-                            minorTicks: 5};
+                    ['Label', 'Value'],
+                    ['Memory', <?php echo floor(get_server_memory_usage()); ?>],
+                    ['CPU', <?php echo get_server_cpu_usage(); ?>]]);
+                var options = {
+                    width: 200, height: 120,
+                    redFrom: 90, redTo: 100,
+                    yellowFrom: 75, yellowTo: 90,
+                    minorTicks: 5};
 
                 var chart = new google.visualization.Gauge(document.getElementById('server-load'));
                 chart.draw(data, options);
