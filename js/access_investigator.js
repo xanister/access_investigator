@@ -238,8 +238,8 @@ function drawResponseCodes(access_data) {
             draw(data,
                     {title: "Top 403s",
                         width: 490, height: 384,
-                        vAxis: {title: "File"},
-                        hAxis: {title: "Count"},
+                        vAxis: {title: "Count"},
+                        hAxis: {title: "File"},
                         seriesType: "bars",
                         series: {5: {type: "line"}}}
             );
@@ -250,8 +250,8 @@ function drawResponseCodes(access_data) {
             draw(data,
                     {title: "Top 404s",
                         width: 490, height: 384,
-                        vAxis: {title: "File"},
-                        hAxis: {title: "Count"},
+                        vAxis: {title: "Count"},
+                        hAxis: {title: "File"},
                         seriesType: "bars",
                         series: {5: {type: "line"}}}
             );
@@ -262,8 +262,8 @@ function drawResponseCodes(access_data) {
             draw(data,
                     {title: "Top 500s",
                         width: 490, height: 384,
-                        vAxis: {title: "File"},
-                        hAxis: {title: "Count"},
+                        vAxis: {title: "Count"},
+                        hAxis: {title: "File"},
                         seriesType: "bars",
                         series: {5: {type: "line"}}}
             );
