@@ -188,7 +188,8 @@ function drawIps(access_data) {
 function drawNewFiles(access_data) {
     var graph_data = [['date', 'amount', '']];
     $.each(access_data, function(created_date, filenames) {
-        graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
+	if(filenames.length > 0)
+        	graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
     });
 
     var data = google.visualization.arrayToDataTable(graph_data);
@@ -199,7 +200,8 @@ function drawNewFiles(access_data) {
 function drawPerms(access_data) {
     var graph_data = [['date', 'amount', '']];
     $.each(access_data, function(created_date, filenames) {
-        graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
+	if(filenames.length > 0)
+        	graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
     });
 
     var data = google.visualization.arrayToDataTable(graph_data);
