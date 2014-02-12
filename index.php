@@ -48,7 +48,7 @@ include('utils.php');
         <h4 class='chart-heading'>Top errors</h4>
         <div class="chart" id="errors"></div>
         -->
-        
+
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/javascript" src="//www.google.com/jsapi"></script>
         <script type="text/javascript" src="js/access_investigator.js"></script>        
