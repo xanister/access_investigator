@@ -49,7 +49,7 @@ function drawCharts() {
             drawFileRequests(response);
         }
     });
-    
+
     // Today
     $.ajax({
         url: "data/today.json",
@@ -57,7 +57,7 @@ function drawCharts() {
         success: function(response) {
             drawTodayRequests(response);
         }
-    });    
+    });
 
     // User agents
     $.ajax({
