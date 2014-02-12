@@ -12,7 +12,7 @@ $(document).ready(function() {
         dataType: "json",
         success: function(response) {
             window.totals = response;
-            $('#last-update').html('Last updated: ' + window.totals.last_update + " UTC");            
+            $('#last-update').html('Last updated: ' + window.totals.last_update + " UTC");
             $('.google-visualization-table-th').css('min-width', '60px');
         }
     });
@@ -25,8 +25,8 @@ function toggleShowing(element) {
     if ($(this).hasClass('showing')) {
         $(this).removeClass('showing');
         $(this).scrollTop(0);
-    } else{
-        $('.fileList').removeClass('showing');        
+    } else {
+        $('.fileList').removeClass('showing');
         $(this).addClass('showing');
     }
 }
@@ -49,6 +49,15 @@ function drawCharts() {
             drawFileRequests(response);
         }
     });
+    
+    // Today
+    $.ajax({
+        url: "data/today.json",
+        dataType: "json",
+        success: function(response) {
+            drawTodayRequests(response);
+        }
+    });    
 
     // User agents
     $.ajax({
@@ -92,19 +101,22 @@ function drawCharts() {
         dataType: "json",
         success: function(response) {
             drawResponseCodes(response);
+        },
+        complete: function() {
+            parent.resizeIframe();
         }
     });
 
     // Errors
     /*
-    $.ajax({
-        url: "data/errors.json",
-        dataType: "json",
-        success: function(response) {
-            drawErrors(response);
-        }
-    });
-    */
+     $.ajax({
+     url: "data/errors.json",
+     dataType: "json",
+     success: function(response) {
+     drawErrors(response);
+     }
+     });
+     */
 }
 
 function drawFileRequests(access_data) {
@@ -121,17 +133,22 @@ function drawFileRequests(access_data) {
     // Create and draw the visualization.
     new google.visualization.BarChart(document.getElementById('file-requests')).
             draw(data,
-                    {title: "Requests by file",
-                        width: 490, height: 384,
-                        vAxis: {title: "Filename"},
-                        hAxis: {title: "Requests"}}
-            );
+            {title: "Requests by file",
+                width: 490, height: 384,
+                vAxis: {title: "Filename"},
+                hAxis: {title: "Requests"},
+                animation: {
+                    duration: 1000,
+                    easing: 'in'
+                }
+            }
+    );
 }
 
 function drawDayRequests(access_data) {
     var graph_data = [['date', 'requests']];
     $.each(access_data, function(rdate, requests) {
-        if(requests > 1000)
+        if (requests > 1000)
             graph_data.push([rdate, requests]);
     });
 
@@ -141,11 +158,45 @@ function drawDayRequests(access_data) {
     // Create and draw the visualization.
     new google.visualization.ComboChart(document.getElementById('day-requests')).
             draw(data,
-                    {title: "Requests by day",
-                        width: 490, height: 384,
-                        vAxis: {title: "Requests"},
-                        hAxis: {title: "Date"}}
-            );
+            {title: "Requests by day",
+                width: 490, height: 384,
+                vAxis: {title: "Requests"},
+                hAxis: {title: "Date"},
+                animation: {
+                    duration: 1000,
+                    easing: 'in'
+                }
+            }
+    );
+}
+
+function drawTodayRequests(access_data) {
+    var graph_data = [['target', 'requests']];
+    $.each(access_data, function(filename, requests) {
+        graph_data.push([filename, requests]);
+        if (graph_data.length > 10)
+            return false;
+    });
+
+    if (graph_data.length <= 1)
+        return false;
+
+    // Create and populate the data table.
+    var data = google.visualization.arrayToDataTable(graph_data);
+
+    // Create and draw the visualization.
+    new google.visualization.BarChart(document.getElementById('today-requests')).
+            draw(data,
+            {title: "Requests by file today",
+                width: 490, height: 384,
+                vAxis: {title: "Filename"},
+                hAxis: {title: "Requests"},
+                animation: {
+                    duration: 1000,
+                    easing: 'in'
+                }
+            }
+    );
 }
 
 function drawUserAgents(access_data) {
@@ -176,20 +227,20 @@ function drawIps(access_data) {
     // Create and draw the visualization.
     new google.visualization.ComboChart(document.getElementById('ip-requests')).
             draw(data,
-                    {title: "Requests by ip",
-                        width: 490, height: 384,
-                        vAxis: {title: "Requests"},
-                        hAxis: {title: "IP"},
-                        seriesType: "bars",
-                        series: {5: {type: "line"}}}
-            );
+            {title: "Requests by ip",
+                width: 490, height: 384,
+                vAxis: {title: "Requests"},
+                hAxis: {title: "IP"},
+                seriesType: "bars",
+                series: {5: {type: "line"}}}
+    );
 }
 
 function drawNewFiles(access_data) {
     var graph_data = [['date', 'amount', '']];
     $.each(access_data, function(created_date, filenames) {
-	if(filenames.length > 0)
-        	graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
+        if (filenames.length > 0)
+            graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
     });
 
     var data = google.visualization.arrayToDataTable(graph_data);
@@ -200,8 +251,8 @@ function drawNewFiles(access_data) {
 function drawPerms(access_data) {
     var graph_data = [['date', 'amount', '']];
     $.each(access_data, function(created_date, filenames) {
-	if(filenames.length > 0)
-        	graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
+        if (filenames.length > 0)
+            graph_data.push([created_date, filenames.length, "<div class='file-list'><p>" + filenames[0].replace(new RegExp(root_path, "g"), '').substring(0, 45) + "...</p>" + filenames.join('<br />').replace(new RegExp(root_path, "g"), '') + "</div>"]);
     });
 
     var data = google.visualization.arrayToDataTable(graph_data);
@@ -235,40 +286,46 @@ function drawResponseCodes(access_data) {
     chart.draw(data, {title: 'Requests by response code', width: 490, height: 384});
 
     // 403s
-    data = google.visualization.arrayToDataTable(top_403s.slice(0, 10));
-    new google.visualization.ComboChart(document.getElementById('top-403s')).
-            draw(data,
-                    {title: "Top 403s",
-                        width: 490, height: 384,
-                        vAxis: {title: "Count"},
-                        hAxis: {title: "File"},
-                        seriesType: "bars",
-                        series: {5: {type: "line"}}}
-            );
+    if (top_403s.length > 1) {
+        data = google.visualization.arrayToDataTable(top_403s.slice(0, 10));
+        new google.visualization.ComboChart(document.getElementById('top-403s')).
+                draw(data,
+                {title: "Top 403s",
+                    width: 490, height: 384,
+                    vAxis: {title: "Count"},
+                    hAxis: {title: "File"},
+                    seriesType: "bars",
+                    series: {5: {type: "line"}}}
+        );
+    }
 
     // 404s
-    data = google.visualization.arrayToDataTable(top_404s.slice(0, 10));
-    new google.visualization.ComboChart(document.getElementById('top-404s')).
-            draw(data,
-                    {title: "Top 404s",
-                        width: 490, height: 384,
-                        vAxis: {title: "Count"},
-                        hAxis: {title: "File"},
-                        seriesType: "bars",
-                        series: {5: {type: "line"}}}
-            );
+    if (top_404s.length > 1) {
+        data = google.visualization.arrayToDataTable(top_404s.slice(0, 10));
+        new google.visualization.ComboChart(document.getElementById('top-404s')).
+                draw(data,
+                {title: "Top 404s",
+                    width: 490, height: 384,
+                    vAxis: {title: "Count"},
+                    hAxis: {title: "File"},
+                    seriesType: "bars",
+                    series: {5: {type: "line"}}}
+        );
+    }
 
     // 500s
-    data = google.visualization.arrayToDataTable(top_500s.slice(0, 10));
-    new google.visualization.ComboChart(document.getElementById('top-500s')).
-            draw(data,
-                    {title: "Top 500s",
-                        width: 490, height: 384,
-                        vAxis: {title: "Count"},
-                        hAxis: {title: "File"},
-                        seriesType: "bars",
-                        series: {5: {type: "line"}}}
-            );
+    if (top_500s.length > 1) {
+        data = google.visualization.arrayToDataTable(top_500s.slice(0, 10));
+        new google.visualization.ComboChart(document.getElementById('top-500s')).
+                draw(data,
+                {title: "Top 500s",
+                    width: 490, height: 384,
+                    vAxis: {title: "Count"},
+                    hAxis: {title: "File"},
+                    seriesType: "bars",
+                    series: {5: {type: "line"}}}
+        );
+    }
 }
 
 function drawErrors(access_data) {
